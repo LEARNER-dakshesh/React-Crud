@@ -1,0 +1,33 @@
+.course-builder {
+  margin: 0 auto;
+  width: 50%;
+  text-align: left;
+}
+
+.course-builder header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.course-builder .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  border: 2px dashed #ccc;
+}
+
+.course-builder .empty-state {
+  text-align: center;
+}
+
+.course-builder .empty-state img {
+  width: 400px;
+  height: 200px;
+}
+
+.course-builder .empty-state p {
+  margin: 10px 0;
+}
