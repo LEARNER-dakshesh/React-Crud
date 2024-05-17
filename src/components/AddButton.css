@@ -17,6 +17,7 @@
   left: 0;
   background-color: white;
   border: 1px solid #ccc;
+  align-items: flex-start;
   width: 200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1;

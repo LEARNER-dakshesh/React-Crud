@@ -1,33 +1,122 @@
 .course-builder {
+  padding: 20px;
+  max-width: 600px;
   margin: 0 auto;
-  width: 50%;
-  text-align: left;
+  font-family: Arial, sans-serif;
 }
 
-.course-builder header {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.course-builder .content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-  border: 2px dashed #ccc;
+h1 {
+  font-size: 24px;
 }
 
-.course-builder .empty-state {
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.empty-state {
   text-align: center;
 }
 
-.course-builder .empty-state img {
-  width: 400px;
-  height: 200px;
+.empty-state img {
+  max-width: 100%;
+  height: auto;
 }
 
-.course-builder .empty-state p {
-  margin: 10px 0;
+.module-item {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s;
+  position: relative;
+}
+
+.module-item:hover {
+  background-color: #f1f1f1;
+}
+
+.module-edit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.module-edit input {
+  flex: 1;
+  padding: 5px;
+}
+
+.module-edit button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.module-edit button:hover {
+  background-color: #0056b3;
+}
+
+.module-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 3;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 150px;
+}
+
+.dropdown-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.dropdown-icon {
+  margin-right: 8px;
+}
+
+.dropdown-text {
 }

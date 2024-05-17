@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./AddButton.css";
+import link_icon from "../images/link_icon.png";
+import module_icon from "../images/module_icon.png";
+import upload_icon from "../images/upload_icon.png";
 
 const AddButton = ({ onModuleCreate }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,10 +42,15 @@ const AddButton = ({ onModuleCreate }) => {
       {isOpen && (
         <div className="dropdown">
           <div className="dropdown-item" onClick={handleCreateModuleClick}>
-            Create module
+            <img src={module_icon} alt="module_icon" /> Create module
           </div>
-          <div className="dropdown-item">Add a link</div>
-          <div className="dropdown-item">Upload</div>
+          <div className="dropdown-item">
+            <img src={link_icon} alt="link_icon"></img>Add a link
+          </div>
+          <div className="dropdown-item">
+            <img src={upload_icon} alt="upload_icon" />
+            Upload
+          </div>
         </div>
       )}
       {showModal && (
