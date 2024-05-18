@@ -6,6 +6,8 @@ import img2 from "../images/img2.png";
 import img3 from "../images/img3.png";
 import drop_icon from "../images/drop_icon.png";
 import pdf_icon from "../images/pdf_icon.png";
+import download from "../images/download.png";
+import link_upload from "../images/Link_upload.png";
 
 const CourseBuilder = () => {
   const [modules, setModules] = useState([]);
@@ -13,13 +15,27 @@ const CourseBuilder = () => {
   const [editingModule, setEditingModule] = useState(null);
   const [renamingFile, setRenamingFile] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [addingLink, setAddingLink] = useState(false);
 
   const addModule = (moduleName) => {
     setModules([...modules, { name: moduleName, isEditing: false }]);
   };
 
+  const handleAddLink = () => {
+    setAddingLink(true);
+  };
+
+  const addLink = (linkData) => {
+    linkData.type = "url";
+    setUploadedFiles([...uploadedFiles, linkData]);
+    // console.log(uploadedFiles);
+  };
+
   const handleFileUpload = (file) => {
-    setUploadedFiles([...uploadedFiles, file]);
+    setUploadedFiles([
+      ...uploadedFiles,
+      { name: file.name, url: URL.createObjectURL(file) },
+    ]);
   };
 
   const editModule = (index, newName) => {
@@ -60,6 +76,7 @@ const CourseBuilder = () => {
   const handleDownloadClick = (index) => {
     const file = uploadedFiles[index];
     const link = document.createElement("a");
+
     link.href = file.url;
     link.download = file.name;
     document.body.appendChild(link);
@@ -68,10 +85,8 @@ const CourseBuilder = () => {
   };
 
   const handleDeleteClick = (index) => {
-    if (window.confirm("Are you sure you want to delete this file?")) {
-      const updatedFiles = uploadedFiles.filter((_, i) => i !== index);
-      setUploadedFiles(updatedFiles);
-    }
+    const updatedFiles = uploadedFiles.filter((_, i) => i !== index);
+    setUploadedFiles(updatedFiles);
   };
 
   const handleDropdownToggle = (index) => {
@@ -98,7 +113,11 @@ const CourseBuilder = () => {
     <div className="course-builder">
       <header>
         <h1>Course builder</h1>
-        <AddButton onModuleCreate={addModule} onFileUpload={handleFileUpload} />
+        <AddButton
+          onModuleCreate={addModule}
+          onFileUpload={handleFileUpload}
+          onAddLink={handleAddLink}
+        />
       </header>
       <div className="content">
         {modules.length === 0 && uploadedFiles.length === 0 ? (
@@ -120,7 +139,11 @@ const CourseBuilder = () => {
             {uploadedFiles.map((file, index) => (
               <div key={index} className="uploaded-file">
                 <div className="uploaded-file-content">
-                  <img src={pdf_icon} alt="Pdf icon" className="pdf-iconimg" />
+                  <img
+                    src={file.type === "url" ? link_upload : pdf_icon}
+                    alt={file.type === "url" ? "Link icon" : "Pdf icon"}
+                    className="icon-img"
+                  />
                   <p>{file.name}</p>
                   <button
                     className="dropdown-toggle"
@@ -160,6 +183,16 @@ const CourseBuilder = () => {
             closeRenameModal();
           }}
           onClose={closeRenameModal}
+        />
+      )}
+
+      {addingLink && (
+        <LinkModal
+          onSave={(newLink) => {
+            addLink(newLink);
+            setAddingLink(false);
+          }}
+          onClose={() => setAddingLink(false)}
         />
       )}
     </div>
@@ -216,12 +249,15 @@ const DropdownMenu = ({
   return (
     <div className="dropdown-menu">
       <div className="dropdown-item" onClick={() => openRenameModal(index)}>
+        <img src={img2} alt="Dropdown icon" className="dropdown-icon" />
         Rename
       </div>
       <div className="dropdown-item" onClick={() => handleDownloadClick(index)}>
+        <img src={download} alt="Dropdown icon" className="dropdown-icon" />
         Download
       </div>
       <div className="dropdown-item" onClick={() => handleDeleteClick(index)}>
+        <img src={img3} alt="Dropdown icon" className="dropdown-icon" />
         Delete
       </div>
     </div>
@@ -293,6 +329,55 @@ const RenameModal = ({ file, onSave, onClose }) => {
           </button>
           <button className="save-button" onClick={handleSaveClick}>
             Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LinkModal = ({ onSave, onClose }) => {
+  const [url, setUrl] = useState("");
+  const [displayName, setDisplayName] = useState("");
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
+  };
+
+  const handleDisplayNameChange = (event) => {
+    setDisplayName(event.target.value);
+  };
+
+  const handleSaveClick = () => {
+    onSave({ url, name: displayName });
+  };
+
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h1>Add new link</h1>
+        <h2>URL</h2>
+        <input
+          type="text"
+          value={url}
+          onChange={handleUrlChange}
+          placeholder="Enter URL"
+          className="module-input"
+        />
+        <h2>Display name</h2>
+        <input
+          type="text"
+          value={displayName}
+          onChange={handleDisplayNameChange}
+          placeholder="Enter display name"
+          className="module-input"
+        />
+        <div className="modal-actions">
+          <button className="cancel-button" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="save-button" onClick={handleSaveClick}>
+            Add
           </button>
         </div>
       </div>
