@@ -13,12 +13,12 @@
 
 .dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 0;
   background-color: white;
   border: 1px solid #ccc;
-  align-items: flex-start;
-  width: 200px;
+  width: 300px;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1;
 }
@@ -32,6 +32,9 @@
   background-color: #f0f0f0;
 }
 
+.dropdown-item img {
+  margin-right: 10px;
+}
 .modal {
   position: fixed;
   top: 0;
@@ -78,8 +81,8 @@
 }
 
 .module-input:focus {
-  outline: 1px solid black; /* Remove the default outline on focus */
-  border-color: white; /* Optional: change border color on focus */
+  outline: 1px solid black;
+  border-color: white;
   box-shadow: black;
 }
 
