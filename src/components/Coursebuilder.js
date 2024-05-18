@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddButton from "./AddButton";
 import "./CourseBuilder.css";
 import img1 from "../images/img1.png";
@@ -11,6 +11,8 @@ const CourseBuilder = () => {
   const [modules, setModules] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [editingModule, setEditingModule] = useState(null);
+  const [renamingFile, setRenamingFile] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   const addModule = (moduleName) => {
     setModules([...modules, { name: moduleName, isEditing: false }]);
@@ -40,6 +42,58 @@ const CourseBuilder = () => {
     setEditingModule(null);
   };
 
+  const openRenameModal = (index) => {
+    setRenamingFile(index);
+  };
+
+  const closeRenameModal = () => {
+    setRenamingFile(null);
+  };
+
+  const renameFile = (index, newName) => {
+    const updatedFiles = uploadedFiles.map((file, i) =>
+      i === index ? { ...file, name: newName } : file
+    );
+    setUploadedFiles(updatedFiles);
+  };
+
+  const handleDownloadClick = (index) => {
+    const file = uploadedFiles[index];
+    const link = document.createElement("a");
+    link.href = file.url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleDeleteClick = (index) => {
+    if (window.confirm("Are you sure you want to delete this file?")) {
+      const updatedFiles = uploadedFiles.filter((_, i) => i !== index);
+      setUploadedFiles(updatedFiles);
+    }
+  };
+
+  const handleDropdownToggle = (index) => {
+    setActiveDropdown(activeDropdown === index ? null : index);
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      !event.target.closest(".dropdown-menu") &&
+      !event.target.closest(".dropdown-toggle")
+    ) {
+      setActiveDropdown(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="course-builder">
       <header>
@@ -68,7 +122,20 @@ const CourseBuilder = () => {
                 <div className="uploaded-file-content">
                   <img src={pdf_icon} alt="Pdf icon" className="pdf-iconimg" />
                   <p>{file.name}</p>
-                  <span className="ellipsis">&#x22EE;</span>
+                  <button
+                    className="dropdown-toggle"
+                    onClick={() => handleDropdownToggle(index)}
+                  >
+                    &#x22EE;
+                  </button>
+                  {activeDropdown === index && (
+                    <DropdownMenu
+                      index={index}
+                      openRenameModal={openRenameModal}
+                      handleDownloadClick={handleDownloadClick}
+                      handleDeleteClick={handleDeleteClick}
+                    />
+                  )}
                 </div>
               </div>
             ))}
@@ -83,6 +150,16 @@ const CourseBuilder = () => {
             closeEditModal();
           }}
           onClose={closeEditModal}
+        />
+      )}
+      {renamingFile !== null && (
+        <RenameModal
+          file={uploadedFiles[renamingFile]}
+          onSave={(newName) => {
+            renameFile(renamingFile, newName);
+            closeRenameModal();
+          }}
+          onClose={closeRenameModal}
         />
       )}
     </div>
@@ -130,6 +207,27 @@ const ModuleItem = ({ index, module, onDelete, openEditModal }) => {
   );
 };
 
+const DropdownMenu = ({
+  index,
+  openRenameModal,
+  handleDownloadClick,
+  handleDeleteClick,
+}) => {
+  return (
+    <div className="dropdown-menu">
+      <div className="dropdown-item" onClick={() => openRenameModal(index)}>
+        Rename
+      </div>
+      <div className="dropdown-item" onClick={() => handleDownloadClick(index)}>
+        Download
+      </div>
+      <div className="dropdown-item" onClick={() => handleDeleteClick(index)}>
+        Delete
+      </div>
+    </div>
+  );
+};
+
 const EditModal = ({ module, onSave, onClose }) => {
   const [newName, setNewName] = useState(module.name);
 
@@ -151,6 +249,42 @@ const EditModal = ({ module, onSave, onClose }) => {
           value={newName}
           onChange={handleInputChange}
           placeholder="Enter module name"
+          className="module-input"
+        />
+        <div className="modal-actions">
+          <button className="cancel-button" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="save-button" onClick={handleSaveClick}>
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RenameModal = ({ file, onSave, onClose }) => {
+  const [newName, setNewName] = useState(file.name);
+
+  const handleInputChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const handleSaveClick = () => {
+    onSave(newName);
+  };
+
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h1>Rename File</h1>
+        <h3>File name</h3>
+        <input
+          type="text"
+          value={newName}
+          onChange={handleInputChange}
+          placeholder="Enter file name"
           className="module-input"
         />
         <div className="modal-actions">
