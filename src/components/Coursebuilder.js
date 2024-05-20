@@ -112,11 +112,14 @@ const CourseBuilder = () => {
   return (
     <div className="course-builder">
       <header>
-        <h1>Course builder</h1>
+        <h1 font="Avenir Next" class="header-title">
+          Course builder
+        </h1>
         <AddButton
           onModuleCreate={addModule}
           onFileUpload={handleFileUpload}
           onAddLink={handleAddLink}
+          className="addButton"
         />
       </header>
       <div className="content">
@@ -144,7 +147,35 @@ const CourseBuilder = () => {
                     alt={file.type === "url" ? "Link icon" : "Pdf icon"}
                     className="icon-img"
                   />
-                  <p>{file.name}</p>
+                  <p
+                    style={{
+                      fontFamily: "Avenir Next",
+                      color: "#222222",
+                      marginLeft: "20px",
+                      fontSize: "14px",
+                      marginTop: "0px",
+                    }}
+                  >
+                    {file.name}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "Avenir Next",
+                      color: "#717171",
+                      marginTop: "35px",
+                      fontSize: "12px",
+                      lineHeight: "16px",
+                      fontWeight: 500,
+                      paddingLeft: 0,
+                      marginLeft: -100,
+                    }}
+                  >
+                    {file.type == "url" ? (
+                      <div style={{ paddingLeft: 0, marginLeft: 5 }}>Link</div>
+                    ) : (
+                      <div style={{ paddingLeft: 0, marginLeft: 17 }}>PDF</div>
+                    )}
+                  </p>
                   <button
                     className="dropdown-toggle"
                     onClick={() => handleDropdownToggle(index)}
@@ -219,7 +250,38 @@ const ModuleItem = ({ index, module, onDelete, openEditModal }) => {
     <div className="module-item">
       <div className="module-content">
         <img src={drop_icon} alt="Dropdown icon" className="dropdown-icon" />
-        <span>{module.name}</span>
+        <span
+          style={{
+            fontFamily: "Avenir Next",
+            color: "#222222",
+            fontSize: "14px",
+            lineHeight: "20px",
+            fontWeight: 600,
+            marginBottom: 0,
+          }}
+        >
+          <p
+            style={{
+              marginLeft: "20px",
+            }}
+          >
+            {module.name}
+          </p>
+          <p
+            style={{
+              fontFamily: "Avenir Next",
+              color: "#717171",
+              marginTop: "-10px",
+              fontSize: "12px",
+              lineHeight: "16px",
+              fontWeight: 500,
+              paddingLeft: 0,
+              marginLeft: 0,
+            }}
+          >
+            Add items to this module
+          </p>
+        </span>
         <button className="dropdown-toggle" onClick={handleDropdownToggle}>
           &#x22EE;
         </button>
